@@ -1739,7 +1739,7 @@ class DdgCmd:
                 copier_params = ['clipboard', '-i']
 
             if copier_params:
-                Popen(copier_params, stdin=PIPE, stdout=DEVNULL, stderr=DEVNULL).communicate(content)
+                Popen(copier_params, stdin=PIPE, stdout=sys.stdout, stderr=DEVNULL).communicate(content)
                 return
 
             # If native clipboard utilities are absent, try to use terminal multiplexers

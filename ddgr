@@ -92,7 +92,41 @@ TEXT_BROWSERS = ['elinks', 'links', 'lynx', 'w3m', 'www-browser']
 INDENT = 5
 
 # Global helper functions
+def make_safe_url(url: str) -> str:
+    """
+    Convert a URL with Unicode characters into a browser-safe ASCII URL.
 
+    International domain names converted Punycode
+    Everything else is percent-encoded.
+    """
+    parts = urllib.parse.urlsplit(url)
+
+    hostname = parts.hostname
+    if hostname:
+        try:
+            hostname = hostname.encode("idna").decode("ascii")
+        except UnicodeError:
+            pass
+
+    netloc = ""
+
+    if parts.username:
+        netloc += urllib.parse.quote(parts.username)
+        if parts.password:
+            netloc += ":" + urllib.parse.quote(parts.password)
+        netloc += "@"
+
+    if hostname:
+        netloc += hostname
+
+    if parts.port:
+        netloc += f":{parts.port}"
+
+    path = urllib.parse.quote(parts.path)
+    query = urllib.parse.quote(parts.query, safe="=&")
+    fragment = urllib.parse.quote(parts.fragment)
+
+    return urllib.parse.urlunsplit((parts.scheme, netloc, path, query, fragment))
 
 def open_url(url):
     """Open an URL in the user's default web browser.
@@ -115,9 +149,14 @@ def open_url(url):
     """
     LOGDBG('Opening %s', url)
 
+    # Safe approach to unicode in URL
+    safe_url = make_safe_url(url)
+    if url != safe_url:
+        LOGDBG('Opening unicode-safe URL: %s', safe_url)
+
     # Custom URL handler gets max priority
     if hasattr(open_url, 'url_handler'):
-        with Popen([open_url.url_handler, url], stdin=PIPE) as pipe:
+        with Popen([open_url.url_handler, safe_url], stdin=PIPE) as pipe:
             pipe.communicate()
         return
 
@@ -142,7 +181,7 @@ def open_url(url):
         os.dup2(fd, 2)
         os.dup2(fd, 1)
     try:
-        browser.open(url, new=2)
+        browser.open(safe_url, new=2)
     finally:
         if open_url.suppress_browser_output:
             os.close(fd)

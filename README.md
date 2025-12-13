@@ -198,6 +198,12 @@ Due to certain graphical browsers spewing messages to the console, `ddgr` suppre
 
 If you need to use a GUI browser with `BROWSER` set, use the omniprompt key `O`. `ddgr` will try to ignore text-based browsers and invoke a GUI browser. Browser logs are always suppressed with `O`.
 
+#### url handler 
+
+try the included url handler and report broken links
+
+  ddgr --url-handler url
+
 #### Colors
 
 The color configuration is similar to that of [`googler` colors](https://github.com/jarun/googler#colors). The default color string is `oCdgxy`. `ddgr` recognizes the environment variable `DDGR_COLORS`. Details are available in the `ddgr` man page.

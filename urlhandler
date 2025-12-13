@@ -1,6 +1,6 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 
-# STATIC WEB VIEWER FOR VIM CODERS that try to support all web sites in text terminal 
+# STATIC WEB VIEWER FOR VIM CODERS that try to support all web sites in text terminal
 
 # add broken links so we can fix them
 broken=(
@@ -101,13 +101,13 @@ for a in $@; do
 		-v) via=true ;;
 			# eval "$links $u | $pager"
 		# exit;;
-	*) u+=$a 
+	*) u+=$a
 		# ((OPTIND++))
 			;;
 esac
 done
 
-# remove header footer if they exist 
+# remove header footer if they exist
 nohead() {
 	# echo $#
 	# exit
@@ -127,7 +127,7 @@ nohead() {
 }
 
 # pager=less
-# nohead head 
+# nohead head
 # # nohead head foot
 # exit
 
@@ -150,7 +150,7 @@ echo agent=$agent
 # exit
 # read -p "open page?"
 fi
- 
+
 # conf
 links="links -dump"
 # pager=less
@@ -172,7 +172,7 @@ $raw && eval "$links $u | $pager" && exit
 $via && termux-open-url $u mark.via.gp && exit
 
 case $host in
-# cloud flare 
+# cloud flare
 x.com|askubuntu.com|*serverfault.com|*superuser.com|*stackexchange.com|stackoverflow.com)
 # carbonyl $u
 termux-open-url $u mark.via.gp
@@ -199,33 +199,33 @@ curl_chrome124 \
 -sLv -b "$cookie" \
 --referer https://$host \
 	$u | lynx -stdin -dump | less -F
-	;; 
+	;;
 
-# bad pre processing 
+# bad pre processing
 *ibm.com|*linux.org|linuxize.com|linux.die.net|*linuxquestions.org|*linuxmint.com|ubuntuforums.org)
 	termux-open-url $u mark.via.gp
 	exit
 	agent=Gecko
 	curl -sL --http2 -A "$agent" $u | lynx -stdin -dump | less
-	;; 
+	;;
 
 # header killer
-developer.android.com) 
+developer.android.com)
 	case $u in
 		*reference*) nohead 'java.lang.Object|Artifact:' 'easyToUnderstand';;
 		*) eval $browser ;;
 	esac ;;
 source.android.com) nohead 'Core Topics' 'easyToUnderstand' ;;
 cloud.google.com) nohead 'Transform with|Send feedback|Stay organized with collections' 'easyToUnderstand'  ;;
-*wikipedia.org) nohead  'From Wikipedia|Other languages'  ;; 
+*wikipedia.org) nohead  'From Wikipedia|Other languages'  ;;
 
-	# custom programs 
+	# custom programs
 gist.github*.com)	gh gist view $u;;
 docs.github.com) links -dump $u | $pager;;
 github.com)
 	case $path in
-	*discussions*|*wiki*) nohead 'Jump to bottom|Additional navigation options|Select Topic Area' 	;; 
-		# eval $browser 
+	*discussions*|*wiki*) nohead 'Jump to bottom|Additional navigation options|Select Topic Area' 	;;
+		# eval $browser
 	*issues*)	gh issue view --comments $u;;
 	*pull*)	gh pr view --comments $u;;
 	# file
@@ -257,10 +257,10 @@ github.com)
 *stackoverflow.com) socli -o $u ;;
 
 
-#  JavaScript never works 
+#  JavaScript never works
 *cyberciti.biz) elinks $u -dump | eval $pager;;
 
-# last resort  ... 
+# last resort  ...
 answers.microsoft.com|developer.arm.com|quora.com|*jetbrains.com)
 chromium-browser --enable-logging --headless --disable-gpu --dump-dom $u|lynx -stdin -dump| $pager
 # read -p "open in Firefox?" y

@@ -198,11 +198,11 @@ Due to certain graphical browsers spewing messages to the console, `ddgr` suppre
 
 If you need to use a GUI browser with `BROWSER` set, use the omniprompt key `O`. `ddgr` will try to ignore text-based browsers and invoke a GUI browser. Browser logs are always suppressed with `O`.
 
-#### url handler 
+#### url handler
 
-try the included url handler and report broken links
+Try the included url handler and report broken links
 
-  ddgr --url-handler url
+  ddgr --url-handler urlhandler
 
 #### Colors
 
